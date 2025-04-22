@@ -7,7 +7,7 @@ on:
             - '*'
 jobs:
     full-test:
-        container: cuaesd/aesd-autotest:24-assignment4-buildroot
+        container: cuaesd/aesd-autotest:24-assignment5-buildroot
         runs-on: self-hosted
         environment: SSH_KEYS
         timeout-minutes: 120
