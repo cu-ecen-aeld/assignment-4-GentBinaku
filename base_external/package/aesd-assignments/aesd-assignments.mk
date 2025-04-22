@@ -1,31 +1,39 @@
 
-##############################################################
-#
-# AESD-ASSIGNMENTS
-#
-##############################################################
-
-#TODO: Fill up the contents below in order to reference your assignment 3 git contents
-AESD_ASSIGNMENTS_VERSION = '0c741d367896888f8594c9def211b28ed5264545'
-# Note: Be sure to reference the *ssh* repository URL here (not https) to work properly
-# with ssh keys and the automated build/test system.
-# Your site should start with git@github.com:
-AESD_ASSIGNMENTS_SITE = 'git@github.com:cu-ecen-aeld/assignments-3-and-later-GentBinaku.git'
+################################################################################
+# aesd-assignments Buildroot package
+################################################################################
+# This package will fetch your AESD assignments repository, build the aesdsocket
+# daemon, and install the binary and init script into the target filesystem.
+################################################################################
+AESD_ASSIGNMENTS_VERSION = 584f36dcaba2c21c9049e28629b4d1d78235208f
+AESD_ASSIGNMENTS_SITE = git@github.com:cu-ecen-aeld/assignments-3-and-later-GentBinaku.git
 AESD_ASSIGNMENTS_SITE_METHOD = git
 AESD_ASSIGNMENTS_GIT_SUBMODULES = YES
 
+AESD_ASSIGNMENTS_DEPENDENCIES = 
+
+# Use server subdirectory to build aesdsocket
 define AESD_ASSIGNMENTS_BUILD_CMDS
-	$(MAKE) $(TARGET_CONFIGURE_OPTS) LDFLAGS="-lc" -C $(@D)/finder-app all 
+	$(MAKE) -C $(@D)/server \
+		CC="$(TARGET_CC)" \
+		LD="$(TARGET_CC)" \
+		CFLAGS="$(TARGET_CFLAGS)" \
+		LDFLAGS="$(TARGET_LDFLAGS)" all
 endef
 
-# TODO add your writer, finder and finder-test utilities/scripts to the installation steps below
+# Install the aesdsocket binary and init script
 define AESD_ASSIGNMENTS_INSTALL_TARGET_CMDS
-	$(INSTALL) -d 0755 $(@D)/conf/ $(TARGET_DIR)/etc/finder-app/conf/
-	$(INSTALL) -m 0755 $(@D)/conf/* $(TARGET_DIR)/etc/finder-app/conf/
-	$(INSTALL) -m 0755 $(@D)/assignment-autotest/test/assignment4/* $(TARGET_DIR)/bin
-	$(INSTALL) -m 0755 $(@D)/finder-app/writer $(TARGET_DIR)/usr/bin
-	$(INSTALL) -m 0755 $(@D)/finder-app/finder-test.sh $(TARGET_DIR)/usr/bin
-	$(INSTALL) -m 0755 $(@D)/finder-app/finder.sh $(TARGET_DIR)/usr/bin
+	# Install the aesdsocket executable
+	$(INSTALL) -D -m 0755 $(@D)/server/aesdsocket \
+		$(TARGET_DIR)/usr/bin/aesdsocket
+
+	# Install the init script under S99 to run at the proper runlevels
+	$(INSTALL) -D -m 0755 $(@D)/server/aesd-start-stop \
+		$(TARGET_DIR)/etc/init.d/S99aesdsocket
 endef
+
+AESD_ASSIGNMENTS_LICENSE = MIT
+AESD_ASSIGNMENTS_LICENSE_FILES = LICENSE
 
 $(eval $(generic-package))
+
