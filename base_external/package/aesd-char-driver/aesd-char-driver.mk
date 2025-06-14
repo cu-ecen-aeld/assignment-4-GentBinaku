@@ -3,7 +3,7 @@
 #####################################################################
 
 
-AESD_CHAR_DRIVER_VERSION = 0f5e7ffb124ff679394382451eaa5f4f53b968c8
+AESD_CHAR_DRIVER_VERSION = e678bc4da3039f17b7a4eef05cfa373977267c43
 AESD_CHAR_DRIVER_SITE = git@github.com:cu-ecen-aeld/assignments-3-and-later-GentBinaku.git
 AESD_CHAR_DRIVER_SITE_METHOD = git
 AESD_CHAR_DRIVER_GIT_SUBMODULES = YES
@@ -27,7 +27,6 @@ define AESD_CHAR_DRIVER_INSTALL_TARGET_CMDS
 	
 	# Regenerate module dependency list
 	#$(HOST_DIR)/usr/sbin/depmod -a $(LINUX_VERSION_PROBED) 
-
 endef
 
 
